@@ -1,0 +1,2 @@
+#prevent hook file from changing line endings on commit
+hooks/prepare-commit-msg -text

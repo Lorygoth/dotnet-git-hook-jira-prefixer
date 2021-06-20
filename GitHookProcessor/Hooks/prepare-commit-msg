@@ -1,0 +1,4 @@
+#!/bin/sh
+LC_ALL=C
+
+dotnet run --project GitHookProcessor -- prepare-commit-msg $1 $2
