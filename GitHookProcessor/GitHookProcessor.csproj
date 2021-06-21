@@ -18,6 +18,7 @@
     <CallTarget Targets="InitGitHooks"/>
   </Target>
   <Target Name="InitGitHooks">
+    <Exec Command="chmod +x $(MSBuildProjectDirectory.Replace('\', '/'))/Hooks/*" Condition=" '$(OS)' != 'Windows_NT' " />
     <Exec Command="git config core.hooksPath $(MSBuildProjectDirectory.Replace('\', '/'))/Hooks" ConsoleToMsBuild="true"/>
   </Target>
   <ItemGroup>
