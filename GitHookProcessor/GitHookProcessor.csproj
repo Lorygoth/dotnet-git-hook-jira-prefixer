@@ -5,8 +5,12 @@
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>  
   </PropertyGroup>
-  <!-- Executed after "dotnet restore" -->
-  <Target Name="OnRestore" AfterTargets="Restore">
+  <!-- Executed after "dotnet restore" in the project -->
+  <Target Name="OnProjectRestore" AfterTargets="Restore">
+    <CallTarget Targets="InitGitHooks"/>
+  </Target>
+  <!-- Executed after "dotnet restore" in the solution -->
+  <Target Name="OnSolutionRestore" AfterTargets="_GenerateRestoreProjectSpec">
     <CallTarget Targets="InitGitHooks"/>
   </Target>
   <!-- Executed after on build. Workaround due to Visual Studio not calling "dotnet resotre" (instead it calls nuget restore)  -->
