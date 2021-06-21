@@ -6,7 +6,7 @@ namespace GitHookProcessor
     {
         static void Main(string[] args)
         {
-            Startup.Init()
+            new Startup()
                 .Resolve<IHooksResolver>()
                 .ProcessArgs(args);
         }

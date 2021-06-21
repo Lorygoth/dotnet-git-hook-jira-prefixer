@@ -1,6 +1,6 @@
+using GitHookProcessor.Services.Common;
 using System;
 using System.Text.RegularExpressions;
-using GitHookProcessor.Services.Common;
 
 namespace GitHookProcessor.Services.Hooks
 {

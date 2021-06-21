@@ -8,7 +8,7 @@ namespace GitHookProcessor
     public class Startup
     {
         private IContainer container;
-        private Startup()
+        public Startup()
         {
             var builder = new ContainerBuilder();
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
@@ -20,11 +20,6 @@ namespace GitHookProcessor
             builder.RegisterType<HooksResolver>().As<IHooksResolver>();
 
             this.container = builder.Build();
-        }
-
-        public static Startup Init()
-        {
-            return new Startup();
         }
 
         public T Resolve<T>() where T : notnull

@@ -48,12 +48,12 @@ namespace GitHookProcessor.Services.Common
             return new Process
             {
                 StartInfo = IsNotWindows
-                    ? SetupLinuxProcess(processStartInfo, command)
+                    ? SetupUnixProcess(processStartInfo, command)
                     : SetupWindowsProcess(processStartInfo, command)
             };
         }
 
-        private ProcessStartInfo SetupLinuxProcess(ProcessStartInfo processStartInfo, string command)
+        private ProcessStartInfo SetupUnixProcess(ProcessStartInfo processStartInfo, string command)
         {
             processStartInfo.FileName = "/bin/bash";
             processStartInfo.Arguments = $"-c \"{command}\"";

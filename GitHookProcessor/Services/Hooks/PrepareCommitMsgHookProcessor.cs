@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using GitHookProcessor.Common.Enums;
 using GitHookProcessor.Common.Tools;
 using GitHookProcessor.Services.Common;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GitHookProcessor.Services.Hooks
 {
@@ -55,7 +55,7 @@ namespace GitHookProcessor.Services.Hooks
                     ProcessCommit(commitMessageFilePath);
                     return;
                 default:
-                    logger.Error($"Not supported type of prepare-commit-msg: {commitType}");
+                    logger.Error($"Unsupported type of prepare-commit-msg: {commitType}");
                     return;
             }
         }

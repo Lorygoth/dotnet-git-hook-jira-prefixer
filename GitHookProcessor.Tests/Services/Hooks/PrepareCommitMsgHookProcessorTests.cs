@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using Autofac.Extras.FakeItEasy;
 using FakeItEasy;
 using GitHookProcessor.Common.Enums;
 using GitHookProcessor.Common.Extensions;
 using GitHookProcessor.Services.Common;
 using GitHookProcessor.Services.Hooks;
+using System.Collections.Generic;
 using Xunit;
 
 namespace GitHookProcessor.Tests.Services.Hooks

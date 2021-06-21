@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace GitHookProcessor.Services.Common
 {
     public interface ICommandLine

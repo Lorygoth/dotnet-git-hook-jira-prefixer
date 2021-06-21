@@ -1,5 +1,5 @@
-using System;
 using GitHookProcessor.Services.Hooks;
+using System;
 
 namespace GitHookProcessor.Services.Common
 {

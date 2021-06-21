@@ -1,7 +1,7 @@
-using System;
 using Autofac.Extras.FakeItEasy;
 using FakeItEasy;
 using GitHookProcessor.Services.Common;
+using System;
 using Xunit;
 
 namespace GitHookProcessor.Tests.Services.Common

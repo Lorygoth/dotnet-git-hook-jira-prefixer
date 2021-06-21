@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using GitHookProcessor.Services.Common;
 
 namespace GitHookProcessor.Services.Hooks
 {
