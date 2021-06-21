@@ -42,7 +42,7 @@ namespace GitHookProcessor.Tests.Services.Hooks
             var hook = fake.Resolve<PrepareCommitMsgHookProcessor>();
 
             var filepath = "filepath";
-            var gitCommitType = GitCommitTypes.Commit.GetDescription();
+            var gitCommitType = GitCommitTypes.Message.GetDescription();
             var args = new string[] { filepath, gitCommitType };
 
             var commitMessage = "commit message";

@@ -3,9 +3,17 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>9.0</LangVersion>  
   </PropertyGroup>
-  <Target Name="InitGitHooks" AfterTargets="Restore">
+  <!-- Executed after "dotnet restore" -->
+  <Target Name="OnRestore" AfterTargets="Restore">
+    <CallTarget Targets="InitGitHooks"/>
+  </Target>
+  <!-- Executed after on build. Workaround due to Visual Studio not calling "dotnet resotre" (instead it calls nuget restore)  -->
+  <Target Name="OnBuild" AfterTargets="PreBuildEvent">
+    <CallTarget Targets="InitGitHooks"/>
+  </Target>
+  <Target Name="InitGitHooks">
     <Exec Command="git config core.hooksPath $(MSBuildProjectDirectory.Replace('\', '/'))/Hooks" ConsoleToMsBuild="true"/>
   </Target>
   <ItemGroup>

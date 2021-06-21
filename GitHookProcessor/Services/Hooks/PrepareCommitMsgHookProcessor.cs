@@ -51,8 +51,8 @@ namespace GitHookProcessor.Services.Hooks
 
             switch (type)
             {
-                case GitCommitTypes.Commit:
-                    ProcessCommit(commitMessageFilePath);
+                case GitCommitTypes.Message:
+                    ProcessMessage(commitMessageFilePath);
                     return;
                 default:
                     logger.Error($"Unsupported type of prepare-commit-msg: {commitType}");
@@ -60,7 +60,7 @@ namespace GitHookProcessor.Services.Hooks
             }
         }
 
-        private void ProcessCommit(string commitMessageFilePath)
+        private void ProcessMessage(string commitMessageFilePath)
         {
             var commitMessage = fileService.Read(commitMessageFilePath);
             var branchName = gitHelper.GetCurrentBranchName();

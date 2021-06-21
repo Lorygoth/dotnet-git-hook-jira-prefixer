@@ -24,7 +24,15 @@ namespace GitHookProcessor.Services
         public void ProcessArgs(IReadOnlyCollection<string> args)
         {
             if (!TryResolveHookType(args, out var type, out var otherArgs)) return;
-            ProcessHook(type, otherArgs);
+
+            try
+            {
+                ProcessHook(type, otherArgs);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error while processing hook", ex);
+            }
         }
 
         private bool TryResolveHookType(IReadOnlyCollection<string> args, out GitHookTypes type, out IReadOnlyCollection<string> otherArgs)
