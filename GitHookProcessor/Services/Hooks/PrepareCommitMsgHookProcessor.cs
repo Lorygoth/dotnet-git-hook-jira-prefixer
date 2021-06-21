@@ -64,7 +64,7 @@ namespace GitHookProcessor.Services.Hooks
         {
             var commitMessage = fileService.Read(commitMessageFilePath);
             var branchName = gitHelper.GetCurrentBranchName();
-            var jiraTicketName = commitMessagePrefixer.GetJiraTicketName(branchName);
+            if (!commitMessagePrefixer.TryGetJiraTicketName(branchName, out var jiraTicketName)) return;
             var prefixedMessage = commitMessagePrefixer.GetPrefixedMessage(commitMessage, jiraTicketName);
 
             fileService.Write(commitMessageFilePath, prefixedMessage);

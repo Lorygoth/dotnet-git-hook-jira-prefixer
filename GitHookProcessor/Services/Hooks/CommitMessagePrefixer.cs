@@ -74,26 +74,23 @@ namespace GitHookProcessor.Services.Hooks
             return $"{prefix} {message}";
         }
 
-        public string GetJiraTicketName(string branchName)
+        public bool TryGetJiraTicketName(string branchName, out string jiraTicketName)
         {
             const string regexGroup = "ticketname";
 
-            try
-            {
-                var ticketNameMatch = Regex.Match(branchName, $"(?!feature|bugfix)\\/(?<{regexGroup}>{JiraTicketNameRegex}).*");
-                var match = ticketNameMatch.Groups[regexGroup];
+            var pattern = $"(?!feature|bugfix)\\/(?<{regexGroup}>{JiraTicketNameRegex}).*";
+            var ticketNameMatch = Regex.Match(branchName, pattern);
+            var match = ticketNameMatch.Groups[regexGroup];
 
-                if (!match.Success || string.IsNullOrEmpty(match.Value))
-                {
-                    throw new Exception($"Failed to capture jira ticket from branch name: {branchName}");
-                }
-
-                return match.Value;
-            }
-            catch (System.Exception ex)
+            if (!match.Success || string.IsNullOrEmpty(match.Value))
             {
-                throw new Exception($"Failed to capture jira ticket from branch name: {branchName}", ex);
+                logger.Warn($"Branch name doesn't match pattern: {pattern}");
+                jiraTicketName = string.Empty;
+                return false;
             }
+
+            jiraTicketName = match.Value;
+            return true;
         }
     }
 }

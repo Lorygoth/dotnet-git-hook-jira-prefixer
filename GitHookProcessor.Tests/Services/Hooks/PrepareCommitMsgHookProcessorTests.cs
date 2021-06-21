@@ -35,7 +35,7 @@ namespace GitHookProcessor.Tests.Services.Hooks
         };
 
         [Fact]
-        public void Test_Process_ExecutesWithoutError()
+        public void Test_Process_WhenTryGetJiraTicketNameIsTrue_ExecutesCompletelyWithoutError()
         {
             using var fake = new AutoFake();
             // arrange
@@ -50,7 +50,10 @@ namespace GitHookProcessor.Tests.Services.Hooks
             var branchName = "branchName";
             A.CallTo(() => fake.Resolve<IGitHelper>().GetCurrentBranchName()).Returns(branchName);
             var jiraTicketName = "jira ticket name";
-            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().GetJiraTicketName(branchName)).Returns(jiraTicketName);
+            string ticketName;
+            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().TryGetJiraTicketName(branchName, out ticketName))
+                .Returns(true)
+                .AssignsOutAndRefParameters(jiraTicketName);
             var prefixedMessage = "prefixed message";
             A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().GetPrefixedMessage(commitMessage, jiraTicketName)).Returns(prefixedMessage);
 
@@ -60,9 +63,43 @@ namespace GitHookProcessor.Tests.Services.Hooks
             // assert
             A.CallTo(() => fake.Resolve<IFileService>().Read(filepath)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fake.Resolve<IGitHelper>().GetCurrentBranchName()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().GetJiraTicketName(branchName)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().TryGetJiraTicketName(branchName, out ticketName)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().GetPrefixedMessage(commitMessage, jiraTicketName)).MustHaveHappenedOnceExactly();
             A.CallTo(() => fake.Resolve<IFileService>().Write(filepath, prefixedMessage)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Test_Process_WhenTryGetJiraTicketNameIsFalse_StopsExecutingWithoutError()
+        {
+            using var fake = new AutoFake();
+            // arrange
+            var hook = fake.Resolve<PrepareCommitMsgHookProcessor>();
+
+            var filepath = "filepath";
+            var gitCommitType = GitCommitTypes.Message.GetDescription();
+            var args = new string[] { filepath, gitCommitType };
+
+            var commitMessage = "commit message";
+            A.CallTo(() => fake.Resolve<IFileService>().Read(filepath)).Returns(commitMessage);
+            var branchName = "branchName";
+            A.CallTo(() => fake.Resolve<IGitHelper>().GetCurrentBranchName()).Returns(branchName);
+            var jiraTicketName = "jira ticket name";
+            string ticketName;
+            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().TryGetJiraTicketName(branchName, out ticketName))
+                .Returns(false)
+                .AssignsOutAndRefParameters(jiraTicketName);
+            var prefixedMessage = "prefixed message";
+            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().GetPrefixedMessage(commitMessage, jiraTicketName)).Returns(prefixedMessage);
+
+            // act
+            hook.Process(args);
+
+            // assert
+            A.CallTo(() => fake.Resolve<IFileService>().Read(filepath)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fake.Resolve<IGitHelper>().GetCurrentBranchName()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().TryGetJiraTicketName(branchName, out ticketName)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => fake.Resolve<ICommitMessagePrefixer>().GetPrefixedMessage(commitMessage, jiraTicketName)).MustNotHaveHappened();
+            A.CallTo(() => fake.Resolve<IFileService>().Write(filepath, prefixedMessage)).MustNotHaveHappened();
         }
     }
 }

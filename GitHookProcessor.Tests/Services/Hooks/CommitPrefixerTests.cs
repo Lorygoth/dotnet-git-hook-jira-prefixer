@@ -33,17 +33,32 @@ namespace GitHookProcessor.Tests.Services.Hooks
         [InlineData("feature/TICKET-12345-anything", "TICKET-12345")]
         [InlineData("bugfix/TICKET-12345", "TICKET-12345")]
         [InlineData("bugfix/ticket-12345-anything", "ticket-12345")]
-        public void Test_GetCurrentBranchName_WhenCorrectBranchName_ReturnsExpectedValue(string branchName, string expectedResult)
+        public void Test_TryGetCurrentBranchName_WhenCorrectBranchName_ReturnsExpectedValue(string branchName, string expectedResult)
         {
             using var fake = new AutoFake();
             // arrange
             var prefixer = fake.Resolve<CommitMessagePrefixer>();
 
             // act
-            var jiraTicketName = prefixer.GetJiraTicketName(branchName);
+            var success = prefixer.TryGetJiraTicketName(branchName, out var jiraTicketName);
 
             // assert
+            Assert.True(success);
             Assert.Equal(expectedResult, jiraTicketName);
+        }
+
+        [Fact]
+        public void Test_TryGetCurrentBranchName_WhenUnknownBranchNamePattern_ReturnsFalse()
+        {
+            using var fake = new AutoFake();
+            // arrange
+            var prefixer = fake.Resolve<CommitMessagePrefixer>();
+
+            // act
+            var success = prefixer.TryGetJiraTicketName("master", out var jiraTicketName);
+
+            // assert
+            Assert.False(success);
         }
     }
 }
